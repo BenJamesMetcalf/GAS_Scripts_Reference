@@ -200,11 +200,20 @@ if ($best_frwd_len == 19 && $best_frwd_iden >= 94.5) {
 }
 
 ###Blast extracted emm region against database to find match###
-if (glob("$emm_DB/blast_emm_Gene-nucl_DB*")) {
-    system("blastn -db $emm_DB/blast_emm_Gene-nucl_DB -query emm_region_extract.fasta -outfmt 6 -word_size 4 -out emm_vs_DB_nucl.txt");
+if ( -s "emm_region_extract.fasta") {
+    if (glob("$emm_DB/blast_emm_Gene-nucl_DB*")) {
+	system("blastn -db $emm_DB/blast_emm_Gene-nucl_DB -query emm_region_extract.fasta -outfmt 6 -word_size 4 -out emm_vs_DB_nucl.txt");
+    } else {
+	system("makeblastdb -in $emm_DB/emm_Gene-DB_Final.fasta -dbtype nucl -out $emm_DB/blast_emm_Gene-nucl_DB");
+	system("blastn", "-db", "$emm_DB/blast_emm_Gene-nucl_DB", "-query", "emm_region_extract.fasta", "-outfmt", "6", "-word_size", "4", "-out", "emm_vs_DB_nucl.txt");
+    }
 } else {
-    system("makeblastdb -in $emm_DB/emm_Gene-DB_Final.fasta -dbtype nucl -out $emm_DB/blast_emm_Gene-nucl_DB");
-    system("blastn", "-db", "$emm_DB/blast_emm_Gene-nucl_DB", "-query", "emm_region_extract.fasta", "-outfmt", "6", "-word_size", "4", "-out", "emm_vs_DB_nucl.txt");
+    print "Although the best blast hit found a true match against the 19bp primer, the matching contig didn't contain the\nfull 500bp region downstream of the primer that comprises the emm-typing region\n";
+    print $fh "$outName\tExtraction_Error\t--\t--\t--\n";
+    my $old_name = "emm-Type_Results.txt";
+    my $emm_out = $outName."__emm-Type__Results.txt";
+    rename $old_name, $emm_out;
+    exit
 }
 
 my $emm_bestHit = `cat emm_vs_DB_nucl.txt | sort -k12,12 -nr -k3,3 -k4,4 | head -n 1`;
@@ -220,11 +229,13 @@ my $best_emm_iden = $emm_bestArray[2];
 $outName =~ /EMM_(.*)/;
 my $finalName = $1;
 if ($best_emm_iden == 100 && $best_emm_len == 180) {
-    $best_emm_name =~ /\d+__EMM(.*)__EMM.*__\d+/;
+    #$best_emm_name =~ /\d+__EMM(.*)__EMM.*__\d+/;
+    $best_emm_name =~ /\d+__[A-Z]+(.*)__.*__\d+/;
     my $emmType = $1;
     print $fh "$finalName\t$emmType\t$best_emm_name\t$best_emm_iden\t$best_emm_len\n";
 } else {
-    $best_emm_name =~ /\d+__EMM(.*)__EMM.*__\d+/;
+    #$best_emm_name =~ /\d+__EMM(.*)__EMM.*__\d+/;
+    $best_emm_name =~ /\d+__[A-Z]+(.*)__.*__\d+/;
     my $emmType = $1;
     print $fh "$finalName\t$emmType*\t$best_emm_name\t$best_emm_iden\t$best_emm_len\n";
     ###OPEN 'Check_Target_Sequence.txt' FOR APPENDING (CHECK FOR FAILURES)

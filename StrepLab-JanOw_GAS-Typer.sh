@@ -44,16 +44,16 @@ out_nameMISC=MISC_"$just_name"
 ###Call MLST###
 mod-srst2.py --mlst_delimiter '_' --input_pe "$readPair_1" "$readPair_2" --output "$out_nameMLST" --save_scores --mlst_db "$allDB_dir/Streptococcus_pyogenes.fasta" --mlst_definitions "$allDB_dir/spyogenes.txt"
 ###Check and extract new MLST alleles###
-perl ~/TEMP_GAS-Typing/MLST_allele_checkr.pl "$out_nameMLST"__mlst__Streptococcus_pyogenes__results.txt "$out_nameMLST"__*.Streptococcus_pyogenes.sorted.bam "$allDB_dir/Streptococcus_pyogenes.fasta"
+MLST_allele_checkr.pl "$out_nameMLST"__mlst__Streptococcus_pyogenes__results.txt "$out_nameMLST"__*.Streptococcus_pyogenes.sorted.bam "$allDB_dir/Streptococcus_pyogenes.fasta"
 
 ###Call emm Type###
-perl ~/TEMP_GAS-Typing/emm_typer.pl -1 "$readPair_1" -2 "$readPair_1" -r "$allDB_dir" -n "$out_nameEMM"
+emm_typer.pl -1 "$readPair_1" -2 "$readPair_1" -r "$allDB_dir" -n "$out_nameEMM"
 
 ###Call GAS Misc Resistance###
-perl ~/TEMP_GAS-Typing/GAS_miscRes_Typer.pl -1 "$readPair_1" -2 "$readPair_2" -r "$allDB_dir" -m GAS_miscR_Gene-DB_Final.fasta -v GAS_vancR_Gene-DB_Final.fasta -n "$just_name"
+GAS_miscRes_Typer.pl -1 "$readPair_1" -2 "$readPair_2" -r "$allDB_dir" -m GAS_miscR_Gene-DB_Final.fasta -v GAS_vancR_Gene-DB_Final.fasta -n "$just_name"
 
 ###Type Surface and Secretory Proteins###
-perl ~/TEMP_GAS-Typing/GAS_surface-secretory_Typer.pl -1 "$readPair_1" -2 "$readPair_2" -r "$allDB_dir" -p GAS_protein_Gene-DB_Final.fasta -n "$out_namePROT"
+GAS_surface-secretory_Typer.pl -1 "$readPair_1" -2 "$readPair_2" -r "$allDB_dir" -p GAS_protein_Gene-DB_Final.fasta -n "$out_namePROT"
 
 #Add in perl script to find contamination threshold here 
 contamination_level=10
