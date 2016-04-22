@@ -141,7 +141,7 @@ open(my $fh,'>',$surface_output) or die "Could not open file '$surface_output' $
 print $fh "Target\tMatch_Type\tProtein_Type\tCoverage\n";
 
 #my $outName_PROT = "PROT_".$outName;
-system("mod-srst2.py --input_pe $fastq1 $fastq2 --output $outName --log --save_scores --min_coverage 99 --max_divergence 5 --gene_db $protein_DB");
+system("srst2 --samtools_args '\\-A' --input_pe $fastq1 $fastq2 --output $outName --log --save_scores --min_coverage 99.9 --max_divergence 8 --gene_db $protein_DB");
 my @TEMP_PROT_fullgene = glob("PROT_*__fullgenes__*__results\.txt");
 my $PROT_full_name = $TEMP_PROT_fullgene[0];
 

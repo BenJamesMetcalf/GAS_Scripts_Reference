@@ -19,8 +19,8 @@ while (<MY_MLST_INPUT>) {
     }
 }
 
-my $MLST_depth = $MLST_results[-1];
-my $MLST_mismatch = $MLST_results[-3];
+my $MLST_depth = $MLST_results[-2];
+my $MLST_mismatch = $MLST_results[-4];
 print "MLST_depth is: $MLST_depth\n";
 print "MLST_mismatches: $MLST_mismatch\n\n";
 
