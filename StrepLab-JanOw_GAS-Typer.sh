@@ -9,14 +9,12 @@ read -a PARAM <<< $(/bin/sed -n ${SGE_TASK_ID}p $1/job-control.txt)
 
 ###Load Modules###
 #. /usr/share/Modules/init/bash
-module load perl/5.12.3
+module load perl/5.22.1
 module load ncbi-blast+/2.2.29
 module load BEDTools/2.17.0
-module load Python/2.7
-#module load samtools/0.1.18
-#module load bowtie2/2.1.0
 module load freebayes/0.9.21
 module load prodigal/2.60
+module load cutadapt/1.8
 module load srst2/0.1.7
 
 ###This script is called for each job in the qsub array. The purpose of this code is to read in and parse a line of the job-control.txt file
@@ -49,13 +47,16 @@ out_nameRES=RES_"$just_name"
 out_namePLAS=PLAS_"$just_name"
 
 ###Call MLST###
-#mod-srst2.py --mlst_delimiter '_' --input_pe "$readPair_1" "$readPair_2" --output "$out_nameMLST" --save_scores --mlst_db "$allDB_dir/Streptococcus_pyogenes.fasta" --mlst_definitions "$allDB_dir/spyogenes.txt"
 srst2 --samtools_args "\-A" --mlst_delimiter '_' --input_pe "$readPair_1" "$readPair_2" --output "$out_nameMLST" --save_scores --mlst_db "$allDB_dir/Streptococcus_pyogenes.fasta" --mlst_definitions "$allDB_dir/spyogenes.txt" --min_coverage 99.999
 ###Check and extract new MLST alleles###
 MLST_allele_checkr.pl "$out_nameMLST"__mlst__Streptococcus_pyogenes__results.txt "$out_nameMLST"__*.Streptococcus_pyogenes.sorted.bam "$allDB_dir/Streptococcus_pyogenes.fasta"
 
 ###Call emm Type###
+module unload perl/5.22.1
+module load perl/5.16.1-MT
 emm_typer.pl -1 "$readPair_1" -2 "$readPair_1" -r "$allDB_dir" -n "$out_nameEMM"
+module unload perl/5.16.1-MT
+module load perl/5.22.1
 
 ###Call GAS Misc Resistance###
 GAS_miscRes_Typer.pl -1 "$readPair_1" -2 "$readPair_2" -r "$allDB_dir" -m GAS_miscR_Gene-DB_Final.fasta -v GAS_vancR_Gene-DB_Final.fasta -n "$just_name"
@@ -388,12 +389,10 @@ printf "\n" >> "$tabl_out"
 
 
 ###Unload Modules###
-module unload perl/5.12.3
+module unload perl/5.22.1
 module unload ncbi-blast+/2.2.29
 module unload BEDTools/2.17.0
-module unload Python/2.7
-#module unload samtools/0.1.18
-#module unload bowtie2/2.1.0
 module unload freebayes/0.9.21
 module unload prodigal/2.60
+module unload cutadapt/1.8
 module unload srst2/0.1.7
