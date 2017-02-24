@@ -101,7 +101,8 @@ fi
 ###Create the batch output files###
 batch_name=$(echo "$batch_dir" | awk -F"/" '{print $(NF-3)}')
 #printf "Sample_Name\temm_Type\temm_Seq\t%_identity\tmatch_length\n" >> "$out_analysis"/JanOw_"$batch_name"_emmType_results.txt
-printf "Sample\temm_Type\tT_Antigen_Type\tST\tgki\tgtr\tmurI\tmutS\trecP\txpt\tyqiL\tMisc_Resistance\tSurface-Secretory_Type\tGen_Resistance\tPlasmid_Target\n" >> "$out_analysis"/TABLE_GAS_"$batch_name"_Typing_Results.txt
+printf "Sample\temm_Type\tST\tgki\tgtr\tmurI\tmutS\trecP\txpt\tyqiL\tT_Type\tGACI\tEMM_Family\tECM\tHASA\tSDA1\tSIC\tROCA\tPNGA\tSLO-G\tExotoxins\tPBP_ID\tER_CL\tTET\tGYRA_PARC\tFOLA_FOLP\tRARE\tOTHER\n" >> "$out_analysis"/TABLE_GAS_"$batch_name"_Typing_Results.txt
+printf "Sample,MLST,emm_Type,T_Type,MRP,ENN,FBAA,PRTF2,SFB1,R28,SOF,HASA,SDA1,SIC,ROCAM3,ROCAM18,PNGA,SLOG,SpeA,SpeC,SpeG,SpeH,SpeI,SpeJ,SpeK,SpeL,SpeM,SSA,SMEZ,23S1,23S3,CAT,ERMB,ERMT,ERMA,FOLA,FOLP1,FOLP2,GYRA,LNUB,LSAC,LSAE,MEF,PARC,RPOB1,RPOBN,TETL,TETM,TETO\n" >> "$out_analysis"/BIN_GAS_"$batch_name"_Typing_Results.txt
 
 ###Will search thru every file in the batch directory and check if it matches the following regexs: _L.*_R1_001.fastq and _L.*_R2_001.fastq###
 ###If both paired end fastq files are found then the full paths of each file will be written to the 'job-control.txt' file###
@@ -153,7 +154,7 @@ do
     fi
 done
 
-qsub -sync y -q dbd.q -t 1-$(cat $out_jobCntrl/job-control.txt | wc -l) -cwd -o "$out_qsub" -e "$out_qsub" ./StrepLab-JanOw_GAS-Typer.sh $out_jobCntrl
+qsub -sync y -q all.q -t 1-$(cat $out_jobCntrl/job-control.txt | wc -l) -cwd -o "$out_qsub" -e "$out_qsub" ./StrepLab-JanOw_GAS-Typer.sh $out_jobCntrl
 
 ###Output the emm type/MLST/drug resistance data for this sample to it's results output file###
 while read -r line
@@ -161,11 +162,12 @@ do
     batch_name=$(echo $line | awk -F" " '{print $1}' | awk -F"/" '{print $(NF-4)}')
     final_outDir=$(echo $line | awk -F" " '{print $5}')
     final_result_Dir=$(echo $line | awk -F" " '{print $4}')
-    cat $final_outDir/SAMPLE_Isolate__Typing_Results.txt >> $final_result_Dir/SAMPL_GAS_"$batch_name"_Typing_Results.txt
+    #cat $final_outDir/SAMPLE_Isolate__Typing_Results.txt >> $final_result_Dir/SAMPL_GAS_"$batch_name"_Typing_Results.txt
     cat $final_outDir/TABLE_Isolate_Typing_results.txt >> $final_result_Dir/TABLE_GAS_"$batch_name"_Typing_Results.txt
+    cat $final_outDir/BIN_Isolate_Typing_results.txt >> $final_result_Dir/BIN_GAS_"$batch_name"_Typing_Results.txt
     #cat $final_outDir/TEMP_newPBP_allele_info.txt >> $final_result_Dir/UPDATR_GBS_"$batch_name"_Typing_Results.txt
-    #if [[ -e $final_outDir/TEMP_newPBP_allele_info.txt ]]
-    #then
-    #    cat $final_outDir/TEMP_newPBP_allele_info.txt >> $final_result_Dir/UPDATR_GBS_"$batch_name"_Typing_Results.txt
-    #fi
+    if [[ -e $final_outDir/TEMP_newPBP_allele_info.txt ]]
+    then
+        cat $final_outDir/TEMP_newPBP_allele_info.txt >> $final_result_Dir/UPDATR_GBS_"$batch_name"_Typing_Results.txt
+    fi
 done < $out_jobCntrl/job-control.txt
