@@ -347,7 +347,7 @@ my %Res_Targets = (
     "ERM" => "neg",
     "LNUB" => "neg",
     "LSA" => "neg",
-    "MEG" => "neg",
+    "MEF" => "neg",
     "TET" => "neg",
     "CAT" => "neg",
     "GYRA" => "neg",
@@ -848,6 +848,9 @@ while(<MYINPUTFILE>) {
         }
         if ($feat_fullgene[3] =~ m/ERMA/) {
             $Bin_Res_arr[5] = 1;
+        }
+        if ($feat_fullgene[3] =~ m/LNUB/) {
+            $Bin_Res_arr[10] = 1;
         }
         if ($feat_fullgene[3] =~ m/LSAC/) {
             $Bin_Res_arr[11] = 1;

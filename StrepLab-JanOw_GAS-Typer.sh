@@ -14,7 +14,8 @@ module load ncbi-blast+/2.2.29
 module load BEDTools/2.17.0
 module load freebayes/0.9.21
 module load prodigal/2.60
-module load cutadapt/1.8
+#module load cutadapt/1.8
+module load cutadapt/1.8.3
 module load srst2/0.1.7
 
 ###This script is called for each job in the qsub array. The purpose of this code is to read in and parse a line of the job-control.txt file
@@ -38,6 +39,20 @@ just_name=$(echo "$readPair_1" | awk -F"/" '{print $(NF)}' | sed 's/_S[0-9]\+_L[
 out_nameMLST=MLST_"$just_name"
 #out_nameEMM=EMM_"$just_name"
 #out_namePBP=PBP_"$just_name"
+
+###Pre-Process Paired-end Reads###
+fastq1_trimd=cutadapt_"$just_name"_S1_L001_R1_001.fastq
+fastq2_trimd=cutadapt_"$just_name"_S1_L001_R2_001.fastq
+cutadapt -b AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -q 20 --minimum-length 50 --paired-output temp2.fastq -o temp1.fastq $readPair_1 $readPair_2
+cutadapt -b AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT -q 20 --minimum-length 50 --paired-output $fastq1_trimd -o $fastq2_trimd temp2.fastq temp1.fastq
+rm temp1.fastq
+rm temp2.fastq
+module load fastqc/0.11.5
+mkdir "$just_name"_R1_cut
+mkdir "$just_name"_R2_cut
+fastqc "$fastq1_trimd" --outdir=./"$just_name"_R1_cut
+fastqc "$fastq2_trimd" --outdir=./"$just_name"_R2_cut
+module unload fastqc/0.11.5
 
 ###Call MLST###
 srst2 --samtools_args "\-A" --mlst_delimiter '_' --input_pe "$readPair_1" "$readPair_2" --output "$out_nameMLST" --save_scores --mlst_db "$allDB_dir/Streptococcus_pyogenes.fasta" --mlst_definitions "$allDB_dir/spyogenes.txt" --min_coverage 99.999
@@ -136,5 +151,6 @@ module unload ncbi-blast+/2.2.29
 module unload BEDTools/2.17.0
 module unload freebayes/0.9.21
 module unload prodigal/2.60
-module unload cutadapt/1.8
+#module unload cutadapt/1.8
+module unload cutadapt/1.8.3
 module unload srst2/0.1.7
