@@ -337,9 +337,9 @@ system("tail -n+2 $RESFI_full_name >> $merged_net");
 my %drugRes_Col = (
     "ER_CL" => "neg",
     "TET" => "neg",
-    "RARE" => "neg",
+    #"RARE" => "neg",
     "GYRASPY_PARC" => "neg",
-    "FOLA_FOLP" => "neg",
+    #"FOLA_FOLP" => "neg",
     "OTHER" => "neg",
     );
 
@@ -388,11 +388,11 @@ while(<MYINPUTFILE>) {
             }
 	}
 	if ($miscR_fullgene[3] =~ m/CAT/) {
-            if ($drugRes_Col{"RARE"} eq "neg") {
-                $drugRes_Col{"RARE"} = $miscR_fullgene[2];
+            if ($drugRes_Col{"OTHER"} eq "neg") {
+                $drugRes_Col{"OTHER"} = $miscR_fullgene[2];
             } else {
-                my $new_val = $drugRes_Col{"RARE"}.":".$miscR_fullgene[2];
-                $drugRes_Col{"RARE"} = $new_val;
+                my $new_val = $drugRes_Col{"OTHER"}.":".$miscR_fullgene[2];
+                $drugRes_Col{"OTHER"} = $new_val;
             }
         }
 
@@ -501,11 +501,11 @@ while(<MYINPUTFILE>) {
 	    }
         } elsif ($miscR_fullgene[3] =~ m/CAT/i) {#&& $Res_Targets{"CAT"} eq "neg") {
 	    if ($Res_Targets{"CAT"} eq "neg") {
-		if ($drugRes_Col{"RARE"} eq "neg") {
-		    $drugRes_Col{"RARE"} = "CAT";
+		if ($drugRes_Col{"OTHER"} eq "neg") {
+		    $drugRes_Col{"OTHER"} = "CAT";
 		} else {
-		    my $new_val = $drugRes_Col{"RARE"}.":CAT";
-		    $drugRes_Col{"RARE"} = $new_val;
+		    my $new_val = $drugRes_Col{"OTHER"}.":CAT";
+		    $drugRes_Col{"OTHER"} = $new_val;
 		}
 		$Res_Targets{"CAT"} = "pos";
 	    }
@@ -693,11 +693,11 @@ if ($FOLA_file && ! $FOLA_error) {
 	my $bin_out = join(':',@seq_diffs);
 	$Bin_Res_arr[6] = $bin_out;
         my $FOLA_out = "FOLA-".$diff_output;
-        if ($drugRes_Col{"FOLA_FOLP"} eq "neg") {
-            $drugRes_Col{"FOLA_FOLP"} = $FOLA_out;
+        if ($drugRes_Col{"OTHER"} eq "neg") {
+            $drugRes_Col{"OTHER"} = $FOLA_out;
         } else {
-            my $new_val = $drugRes_Col{"FOLA_FOLP"}.":".$FOLA_out;
-            $drugRes_Col{"FOLA_FOLP"} = $new_val;
+            my $new_val = $drugRes_Col{"OTHER"}.":".$FOLA_out;
+            $drugRes_Col{"OTHER"} = $new_val;
         }
     }
 }
@@ -732,11 +732,11 @@ while(<MYINPUTFILE>) {
         print "FOLP DP: $1 | ref allele: $ref_allele | alt allele: $alt_allele\n";
         if (length($ref_allele) != length($alt_allele)) {
 	    $Bin_Res_arr[7] = 1;
-	    if ($drugRes_Col{"FOLA_FOLP"} eq "neg") {
-		$drugRes_Col{"FOLA_FOLP"} = "FOLP1";
+	    if ($drugRes_Col{"OTHER"} eq "neg") {
+		$drugRes_Col{"OTHER"} = "FOLP1";
 	    } else {
-		my $new_val = $drugRes_Col{"FOLA_FOLP"}.":FOLP1";
-		$drugRes_Col{"FOLA_FOLP"} = $new_val;
+		my $new_val = $drugRes_Col{"OTHER"}.":FOLP1";
+		$drugRes_Col{"OTHER"} = $new_val;
 	    }
         }
     }
@@ -752,11 +752,11 @@ if ($Res_Targets{"FOLP2"} eq "pos") {
     my $FOLP2_p13 = substr($FOLP2_aaSeq,12,1);
     if ($FOLP2_p13 eq "G") {
 	$Bin_Res_arr[8] = 1;
-	if ($drugRes_Col{"FOLA_FOLP"} eq "neg") {
-	    $drugRes_Col{"FOLA_FOLP"} = "FOLP2";
+	if ($drugRes_Col{"OTHER"} eq "neg") {
+	    $drugRes_Col{"OTHER"} = "FOLP2";
 	} else {
-	    my $new_val = $drugRes_Col{"FOLA_FOLP"}.":FOLP2";
-	    $drugRes_Col{"FOLA_FOLP"} = $new_val;
+	    my $new_val = $drugRes_Col{"OTHER"}.":FOLP2";
+	    $drugRes_Col{"OTHER"} = $new_val;
 	}
     }
 }
@@ -784,11 +784,11 @@ if ($Res_Targets{"RPOB1"} eq "pos") {
 	my $bin_out = join(':',@seq_diffs);
 	$Bin_Res_arr[15] = $bin_out;
         my $RPOB1_out = "RPOB1-".$diff_output;
-        if ($drugRes_Col{"RARE"} eq "neg") {
-            $drugRes_Col{"RARE"} = $RPOB1_out;
+        if ($drugRes_Col{"OTHER"} eq "neg") {
+            $drugRes_Col{"OTHER"} = $RPOB1_out;
         } else {
-            my $new_val = $drugRes_Col{"RARE"}.":".$RPOB1_out;
-            $drugRes_Col{"RARE"} = $new_val;
+            my $new_val = $drugRes_Col{"OTHER"}.":".$RPOB1_out;
+            $drugRes_Col{"OTHER"} = $new_val;
         }
     }
 }
@@ -813,11 +813,11 @@ if ($Res_Targets{"RPOBN"} eq "pos") {
 	my $bin_out = join(':',@seq_diffs);
 	$Bin_Res_arr[16] = $bin_out;
         my $RPOBN_out = "RPOBN-".$diff_output;
-        if ($drugRes_Col{"RARE"} eq "neg") {
-            $drugRes_Col{"RARE"} = $RPOBN_out;
+        if ($drugRes_Col{"OTHER"} eq "neg") {
+            $drugRes_Col{"OTHER"} = $RPOBN_out;
         } else {
-            my $new_val = $drugRes_Col{"RARE"}.":".$RPOBN_out;
-            $drugRes_Col{"RARE"} = $new_val;
+            my $new_val = $drugRes_Col{"OTHER"}.":".$RPOBN_out;
+            $drugRes_Col{"OTHER"} = $new_val;
         }
     }
 }
@@ -893,7 +893,7 @@ while (my ($key, $val) = each %drugRes_Col) {
 print $fh "ER_CL\t$drugRes_Col{'ER_CL'}\n";
 print $fh "TET\t$drugRes_Col{'TET'}\n";
 print $fh "GYRA_PARC\t$drugRes_Col{'GYRASPY_PARC'}\n";
-print $fh "FOLA_FOLP\t$drugRes_Col{'FOLA_FOLP'}\n";
-print $fh "RARE\t$drugRes_Col{'RARE'}\n";
+#print $fh "FOLA_FOLP\t$drugRes_Col{'FOLA_FOLP'}\n";
+#print $fh "RARE\t$drugRes_Col{'RARE'}\n";
 print $fh "OTHER\t$drugRes_Col{'OTHER'}\n";
 ###############################################################################################

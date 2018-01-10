@@ -183,7 +183,8 @@ while(<MYINPUTFILE>) {
             }
         }
         if ($feat_fullgene[3] =~ m/GACI/) {
-	    $Feat_Col{"GACI"} = $feat_fullgene[2];
+	    #$Feat_Col{"GACI"} = $feat_fullgene[2];
+	    $Feat_Col{"GACI"} = "pos";
         }
         if ($feat_fullgene[3] =~ m/(MRP|ENN)/) {
             if ($Feat_Col{"EMM_Family"} eq "neg") {
@@ -237,13 +238,15 @@ while(<MYINPUTFILE>) {
         }
         if ($feat_fullgene[3] =~ m/PNGA/ && !$feat_fullgene[6]) {
 	    $Bin_Feat_arr[13] = 1;
-            $Feat_Col{"PNGA"} = $feat_fullgene[2];
+            #$Feat_Col{"PNGA"} = $feat_fullgene[2];
+	    $Feat_Col{"PNGA"} = "PNGA3";
         }
     }
 
     if ($feat_fullgene[3] =~ m/SLOG/ && !$feat_fullgene[6] && $feat_fullgene[5] >= 7) {
 	$Bin_Feat_arr[14] = 1;
-	$Feat_Col{"SLO-G"} = $feat_fullgene[2];
+	#$Feat_Col{"SLO-G"} = $feat_fullgene[2];
+	$Feat_Col{"SLO-G"} = "330G";
     }
 }
 ###############################################################################################
