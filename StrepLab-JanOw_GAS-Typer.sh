@@ -69,6 +69,7 @@ module load perl/5.22.1
 
 ###Call GAS Misc Resistance###
 GAS_Res_Typer.pl -1 "$readPair_1" -2 "$readPair_2" -d "$allDB_dir" -r GAS_Res_Gene-DB_Final.fasta -n "$just_name"
+GAS_Target2MIC.pl TEMP_Res_Results.txt "$just_name" TEMP_pbpID_Results.txt
 
 ###Type Surface and Secretory Proteins###
 GAS_Features_Typer.pl -1 "$readPair_1" -2 "$readPair_2" -d "$allDB_dir" -f GAS_features_Gene-DB_Final.fasta -n "$just_name"
@@ -129,9 +130,10 @@ done
 ###Resistance Targets###
 while read -r line
 do
-    RES_targ=$(echo "$line" | cut -f2)
-    printf "$RES_targ\t" >> "$tabl_out"
-done < TEMP_Res_Results.txt
+    #RES_targ=$(echo "$line" | cut -f2)
+    #printf "$RES_targ\t" >> "$tabl_out"
+    printf "$line\t" | tr ',' '\t' >> "$tabl_out"
+done < RES-MIC_"$just_name"
 printf "\n" >> "$tabl_out"
 
 cat BIN_Features_Results.txt | sed 's/$/,/g' >> "$bin_out"

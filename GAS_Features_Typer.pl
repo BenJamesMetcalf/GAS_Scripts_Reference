@@ -130,6 +130,28 @@ my ($help, $fastq1, $fastq2, $ref_dir, $feat_DB, $outDir, $outName) = checkOptio
 
 
 ###Subroutines###
+sub extractFastaByID {
+    my ($lookup, $reference) = @_;
+    open my $fh, "<", $reference or die $!;
+    local $/ = "\n>";  # read by FASTA record
+
+    my $output;
+    while (my $seq = <$fh>) {
+        chomp $seq;
+        #print "while seq:\n$seq\n";
+        my ($id) = $seq =~ /^>*(\S+)/;  # parse ID as first word in FASTA header
+        if ($id eq $lookup) {
+            $seq =~ s/^>*.+\n//;  # remove FASTA header
+            $seq =~ s/\n//g;  # remove endlines
+            #print ">$id\n";
+            #print "$seq\n";
+            $output = ">$id\n$seq\n";
+            #$output = $seq;
+            last;
+        }
+    }
+    return $output;
+}
 
 
 
@@ -159,6 +181,7 @@ my %Feat_Col = (
     "PNGA" => "neg",
     "SLO-G" => "neg",
     "Exotoxins" => "neg",
+    "SLAA" => "neg",
     );
 
 ###Type the Presence/Absence Targets###
@@ -168,7 +191,7 @@ while(<MYINPUTFILE>) {
     next if $. < 2;
     my $line = $_;
     chomp($line);
-    #print "$line\n";
+    print "$line\n";
     my @feat_fullgene;
     @feat_fullgene = split('\t',$line);
     if ($feat_fullgene[5] >= 10) {
@@ -195,6 +218,7 @@ while(<MYINPUTFILE>) {
             }
         }
         if ($feat_fullgene[3] =~ m/(FBAA|PRTF2|SFB1|R28|SOF)/) {
+	    print "FBAA has been found: $feat_fullgene[3]\n";
             if ($Feat_Col{"ECM"} eq "neg") {
                 $Feat_Col{"ECM"} = $feat_fullgene[2];
             } else {
@@ -203,10 +227,45 @@ while(<MYINPUTFILE>) {
             }
         }
         if ($feat_fullgene[3] =~ m/HASA/) {
-            $Feat_Col{"HASA"} = $feat_fullgene[2];
-        }
+	    $Feat_Col{"HASA"} = $feat_fullgene[2];
+	    my $target = "8__HASA__HASA-1__8";
+	    my @TEMP_FEAT_bam = glob("FEAT_*\.sorted\.bam");
+	    my $bamFile = $TEMP_FEAT_bam[0];
+	    (my $samFile = $bamFile) =~ s/\.bam/\.sam/g;
+	    system("samtools view -h $bamFile > $samFile");
+	    system("cat $samFile | grep -E \"^\@HD|^\@SQ.*$target|^\@PG\" > HASA_target_seq.sam");
+	    system("awk -F'\t' '\$3 == \"$target\" {print \$0}' $samFile >> HASA_target_seq.sam");
+	    system("samtools view -bS HASA_target_seq.sam > HASA_target_seq.bam");
+	    system("samtools index HASA_target_seq.bam HASA_target_seq.bai");
+	    my $REF_seq = extractFastaByID("$target","$feat_DB");
+	    open(my $rf,'>',"HASA_target_ref.fna");
+	    print $rf "$REF_seq\n";
+	    close $rf;
+	    system("freebayes -q 20 -p 1 -f HASA_target_ref.fna HASA_target_seq.bam -v HASA_target_seq.vcf");
+	    open(MYINPUTFILE2, "HASA_target_seq.vcf");
+	    my %srst2_seroT;
+	    while(<MYINPUTFILE2>) {
+		my $line = $_;
+		chomp($line);
+		if ($line =~ /^8__HASA__HASA-1__8/) {
+		    my @HASA_line = split('\t', $line);
+		    my $ref_allele = $HASA_line[3];
+		    my $alt_allele = $HASA_line[4];
+		    $HASA_line[7] =~ /DPB=(\d+\.?\d*);/;
+		    print "HASA DP: $1 | ref allele: $ref_allele | alt allele: $alt_allele\n";
+		    my $HASA_dp = $1;
+		    my $HASA_loc = $HASA_line[1];
+		    if (length($ref_allele) != length($alt_allele) && $HASA_dp >= 2) {
+			$Feat_Col{"HASA"} = "neg";
+		    }
+		}
+	    }
+	}
         if ($feat_fullgene[3] =~ m/SDA1/) {
             $Feat_Col{"SDA1"} = $feat_fullgene[2];
+        }
+	if ($feat_fullgene[3] =~ m/SLAA/) {
+            $Feat_Col{"SLAA"} = $feat_fullgene[2];
         }
         if ($feat_fullgene[3] =~ m/SIC/) {
             $Feat_Col{"SIC"} = $feat_fullgene[2];
@@ -362,6 +421,7 @@ print $fh "EMM_Family\t$Feat_Col{'EMM_Family'}\n";
 print $fh "ECM\t$Feat_Col{'ECM'}\n";
 print $fh "HASA\t$Feat_Col{'HASA'}\n";
 print $fh "SDA1\t$Feat_Col{'SDA1'}\n";
+print $fh "SLAA\t$Feat_Col{'SLAA'}\n";
 print $fh "SIC\t$Feat_Col{'SIC'}\n";
 print $fh "ROCA\t$Feat_Col{'ROCA'}\n";
 print $fh "PNGA\t$Feat_Col{'PNGA'}\n";
