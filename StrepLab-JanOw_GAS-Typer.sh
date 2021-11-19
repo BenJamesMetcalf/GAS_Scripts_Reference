@@ -27,7 +27,7 @@ readPair_2=${PARAM[1]}
 allDB_dir=${PARAM[2]}
 batch_out=${PARAM[3]}
 sampl_out=${PARAM[4]}
-
+delete='true'
 
 
 ###Start Doing Stuff###
@@ -134,18 +134,56 @@ do
     #printf "$RES_targ\t" >> "$tabl_out"
     printf "$line\t" | tr ',' '\t' >> "$tabl_out"
 done < RES-MIC_"$just_name"
-printf "\n" >> "$tabl_out"
+
+#if test -n "$(shopt -s nullglob; echo ./velvet_output/*_Logfile.txt)"
+if [[ -e $(echo ./velvet_output/*_Logfile.txt) ]]
+then
+    vel_metrics=$(echo ./velvet_output/*_Logfile.txt)
+    print "velvet metrics file: $vel_metrics\n";
+    velvetMetrics.pl -i "$vel_metrics";
+    line=$(cat velvet_qual_metrics.txt | tr ',' '\t') 
+    printf "$line\t" >> "$tabl_out"
+
+    printf "$readPair_1\t" >> "$tabl_out";
+    pwd | xargs -I{} echo {}"/velvet_output/contigs.fa" >> "$tabl_out"
+else
+    printf "NA\tNA\tNA\tNA\t$readPair_1\tNA\n" >> "$tabl_out"
+fi
+#printf "\n" >> "$tabl_out"
 
 cat BIN_Features_Results.txt | sed 's/$/,/g' >> "$bin_out"
 cat BIN_Res_Results.txt >> "$bin_out"
 printf "\n" >> "$bin_out"
 
-###Remove Temporary Files###
-#rm cutadapt*.fastq
-#rm *.pileup
-#rm *.bam
-#rm *.sam
-#rm TEMP*
+###Remove Unneeded Files###
+if ${delete};
+then
+    echo "The delete flag is true. Will delete all unneeded files"
+    rm *.pileup
+    rm *.*sorted.*am
+    rm *.scores
+    rm *ARGannot_r1.*
+    rm *__genes__*
+    rm *log
+    rm BIN*
+    rm *Final.sam*
+    rm *Results.txt
+    rm emm_region_extract.bed ARG-RESFI_fullgenes_results.txt contig-vs-frwd_nucl.txt velvet_qual_metrics.txt ./velvet_output/Sequences ./velvet_output/stats.txt ./velvet_output/Log
+    rm RES-MIC*
+    rm emm_v*
+    rm cutadapt_*_R*
+    rm FOLP_target_*
+    rm HASA_target_ref.fna*
+    rm HASA_target_seq.[sb]*
+    rm TEMP_*
+    rm velvet_output/*Graph*
+    rm -r *_R1_cut
+    rm -r *_R2_cut
+else
+    echo "The delete flag is false. Will keep all unneeded files"
+fi
+
+
 
 ###Unload Modules###
 module unload perl/5.22.1

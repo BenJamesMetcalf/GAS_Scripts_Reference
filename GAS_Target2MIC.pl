@@ -7,7 +7,8 @@ use Data::Dumper;
 use Getopt::Std;
 use File::Copy qw(copy);
 use Env;
-use lib $ENV{MODULESHOME}."/init";
+#use lib $ENV{MODULESHOME}."/init";
+use lib "/usr/share/Modules/init/";
 use perl;
 
 ###Start Doing Stuff###
@@ -72,25 +73,25 @@ if ($Res_hash{"TET"} eq "neg") {
 $drug{ZOX} = "Flag,Flag,Flag";
 $drug{FOX} = "Flag,Flag,Flag";
 $drug{TAX} = "Flag,Flag,Flag";
-#$drug{CZL} = "Flag,Flag,Flag";
+$drug{CZL} = "Flag,Flag,Flag";
 $drug{CFT} = "Flag,Flag,Flag";
 $drug{CPT} = "Flag,Flag,Flag";
 $drug{AMP} = "Flag,Flag,Flag";
 $drug{PEN} = "Flag,Flag,Flag";
 $drug{MER} = "Flag,Flag,Flag";
-if ($pbp_type <= 18 && $pbp_type != [11|17]) {
+if ($pbp_type <= 18 && $pbp_type != [11|17] && $pbp_type !~ /[A-Za-z]/) {
     $drug{ZOX} = "<=,0.12,U";
     $drug{FOX} = "<=,2,U";
     $drug{TAX} = "<=,0.06,S";
-    #$drug{CZL} = "<=,0.5,U";
     $drug{CFT} = "<=,0.06,S";
     $drug{CPT} = "<=,0.06,S";
+    $drug{CZL} = "<=,0.5,U";
     $drug{AMP} = "<=,0.06,S";
     $drug{PEN} = "<=,0.06,S";
     $drug{MER} = "<=,0.06,S";
 }
-print "PBP,$drug{ZOX},$drug{FOX},$drug{TAX},$drug{CFT},$drug{CPT},$drug{AMP},$drug{PEN},$drug{MER}\n";
-$Out_hash{PBP} = "$drug{ZOX},$drug{FOX},$drug{TAX},$drug{CFT},$drug{CPT},$drug{AMP},$drug{PEN},$drug{MER}";
+print "PBP,$drug{ZOX},$drug{FOX},$drug{TAX},$drug{CFT},$drug{CPT},$drug{CZL},$drug{AMP},$drug{PEN},$drug{MER}\n";
+$Out_hash{PBP} = "$drug{ZOX},$drug{FOX},$drug{TAX},$drug{CFT},$drug{CPT},$drug{CZL},$drug{AMP},$drug{PEN},$drug{MER}";
 
 
 ###ER_CL Category###
@@ -138,9 +139,10 @@ if ($Res_hash{"ER_CL"} eq "neg") {
 
 ###GYRA_PARC Category###
 $drug{LFX} = "<=,2,S";
+$drug{CIP} = "NA,NA,NA";
 if ($Res_hash{"GYRA_PARC"} eq "neg") {
-    print "GYRA_PARC,$Res_hash{GYRA_PARC},".$drug{ERY}."\n";
-    $Out_hash{"GYRA_PARC"} = "$Res_hash{GYRA_PARC},$drug{LFX}";
+    print "GYRA_PARC,$Res_hash{GYRA_PARC},".$drug{LFX}."\n";
+    $Out_hash{"GYRA_PARC"} = "$Res_hash{GYRA_PARC},$drug{CIP},$drug{LFX}";
 } else {
     my @Res_targs = split(':',$Res_hash{GYRA_PARC});
     if ((grep/GYRA-S11F/i,@Res_targs) && (grep/PARC-S6[F|Y]/i,@Res_targs)) {
@@ -156,7 +158,7 @@ if ($Res_hash{"GYRA_PARC"} eq "neg") {
 	$drug{LFX} = "Flag,Flag,Flag";
     }
     print "GYRA_PARC,$Res_hash{GYRA_PARC},".$drug{LFX}."\n";
-    $Out_hash{"GYRA_PARC"} = "$Res_hash{GYRA_PARC},$drug{LFX}";
+    $Out_hash{"GYRA_PARC"} = "$Res_hash{GYRA_PARC},$drug{CIP},$drug{LFX}";
 }
 
 ###Other Category###
@@ -164,7 +166,7 @@ $drug{DAP} = "<=,1,S";
 $drug{VAN} = "<=,1,S";
 $drug{RIF} = "<=,1,U";
 $drug{CHL} = "<=,4,S";
-$drug{SXT} = "<=,0.5/9.5,U";
+$drug{SXT} = "<=,0.5,U";
 if ($Res_hash{"OTHER"} eq "neg") {
     print "OTHER,$Res_hash{OTHER},".$drug{DAP}.",".$drug{VAN}.",".$drug{RIF}.",".$drug{CHL}.",".$drug{SXT}."\n";
     $Out_hash{"OTHER"} = "$Res_hash{OTHER},$drug{DAP},$drug{VAN},$drug{RIF},$drug{CHL},$drug{SXT}";
@@ -190,10 +192,10 @@ if ($Res_hash{"OTHER"} eq "neg") {
 		$drug{CHL} = ">=,16,R";
 	    } elsif ($target =~ m/FOLA/i && $target =~ m/FOLP/i) {
 		print "Found FOLA and FOLP\n";
-		$drug{SXT} = ">=,4/76,U";
+		$drug{SXT} = ">=,4,U";
 	    } elsif ($target =~ m/FOLA/i || $target =~ m/FOLP/i) {
 		print "Found FOLA or FOLP\n";
-		$drug{SXT} = "=,1/19-2/38,U";
+		$drug{SXT} = "=,2,U";
 	    } elsif ($target =~ m/RPOB/i) {
 		print "Found RPOB\n";
 		$drug{RIF} = "Flag,Flag,Flag";

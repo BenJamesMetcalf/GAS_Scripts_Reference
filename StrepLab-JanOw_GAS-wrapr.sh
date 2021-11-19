@@ -101,7 +101,7 @@ fi
 ###Create the batch output files###
 batch_name=$(echo "$batch_dir" | awk -F"/" '{print $(NF-3)}')
 #printf "Sample_Name\temm_Type\temm_Seq\t%_identity\tmatch_length\n" >> "$out_analysis"/JanOw_"$batch_name"_emmType_results.txt
-printf "Sample\temm_Type\tST\tgki\tgtr\tmurI\tmutS\trecP\txpt\tyqiL\tT_Type\tGroup_A\tEMM_Family\tOther_Surface_Proteins\tCapsule\tSDA1\tSLAA\tSIC\tROCA\tPNGA3\tNADase_D330G\tExotoxins\tPBP_ID\tWGS_ZOX_SIGN\tWGS_ZOX\tWGS_ZOX_SIR\tWGS_FOX_SIGN\tWGS_FOX\tWGS_FOX_SIR\tWGS_TAX_SIGN\tWGS_TAX\tWGS_TAX_SIR\tWGS_CFT_SIGN\tWGS_CFT\tWGS_CFT_SIR\tWGS_CPT_SIGN\tWGS_CPT\tWGS_CPT_SIR\tWGS_AMP_SIGN\tWGS_AMP\tWGS_AMP_SIR\tWGS_PEN_SIGN\tWGS_PEN\tWGS_PEN_SIR\tWGS_MER_SIGN\tWGS_MER\tWGS_MER_SIR\tER_CL\tWGS_ERY_SIGN\tWGS_ERY\tWGS_ERY_SIR\tWGS_CLI_SIGN\tWGS_CLI\tWGS_CLI_SIR\tWGS_LZO_SIGN\tWGS_LZO\tWGS_LZO_SIR\tWGS_SYN_SIGN\tWGS_SYN\tWGS_SYN_SIR\tWGS_ERY/CLI\tTET\tWGS_TET_SIGN\tWGS_TET\tWGS_TET_SIR\tGYRA_PARC\tWGS_LFX_SIGN\tWGS_LFX\tWGS_LFX_SIR\tOTHER\tWGS_DAP_SIGN\tWGS_DAP\tWGS_DAP_SIR\tWGS_VAN_SIGN\tWGS_VAN\tWGS_VAN_SIR\tWGS_RIF_SIGN\tWGS_RIF\tWGS_RIF_SIR\tWGS_CHL_SIGN\tWGS_CHL\tWGS_CHL_SIR\tWGS_SXT_SIGN\tWGS_SXT\tWGS_SXT_SIR\n" >> "$out_analysis"/TABLE_GAS_"$batch_name"_Typing_Results.txt
+printf "Sample\temm_Type\tST\tgki\tgtr\tmurI\tmutS\trecP\txpt\tyqiL\tT_Type\tGroup_A\tEMM_Family\tOther_Surface_Proteins\tCapsule\tSDA1\tSLAA\tSIC\tROCA\tPNGA3\tNADase_D330G\tExotoxins\tPBP_ID\tWGS_ZOX_SIGN\tWGS_ZOX\tWGS_ZOX_SIR\tWGS_FOX_SIGN\tWGS_FOX\tWGS_FOX_SIR\tWGS_TAX_SIGN\tWGS_TAX\tWGS_TAX_SIR\tWGS_CFT_SIGN\tWGS_CFT\tWGS_CFT_SIR\tWGS_CPT_SIGN\tWGS_CPT\tWGS_CPT_SIR\tWGS_CZL_SIGN\tWGS_CZL\tWGS_CZL_SIR\tWGS_AMP_SIGN\tWGS_AMP\tWGS_AMP_SIR\tWGS_PEN_SIGN\tWGS_PEN\tWGS_PEN_SIR\tWGS_MER_SIGN\tWGS_MER\tWGS_MER_SIR\tER_CL\tWGS_ERY_SIGN\tWGS_ERY\tWGS_ERY_SIR\tWGS_CLI_SIGN\tWGS_CLI\tWGS_CLI_SIR\tWGS_LZO_SIGN\tWGS_LZO\tWGS_LZO_SIR\tWGS_SYN_SIGN\tWGS_SYN\tWGS_SYN_SIR\tWGS_ERY/CLI\tTET\tWGS_TET_SIGN\tWGS_TET\tWGS_TET_SIR\tGYRA_PARC\tWGS_CIP_SIGN\tWGS_CIP\tWGS_CIP_SIR\tWGS_LFX_SIGN\tWGS_LFX\tWGS_LFX_SIR\tOTHER\tWGS_DAP_SIGN\tWGS_DAP\tWGS_DAP_SIR\tWGS_VAN_SIGN\tWGS_VAN\tWGS_VAN_SIR\tWGS_RIF_SIGN\tWGS_RIF\tWGS_RIF_SIR\tWGS_CHL_SIGN\tWGS_CHL\tWGS_CHL_SIR\tWGS_SXT_SIGN\tWGS_SXT\tWGS_SXT_SIR\tContig_Num\tN50\tLongest_Contig\tTotal_Bases\tReadPair_1\tContig_Path\n" >> "$out_analysis"/TABLE_GAS_"$batch_name"_Typing_Results.txt
 #printf "Sample,MLST,emm_Type,T_Type,MRP,ENN,FBAA,PRTF2,SFB1,R28,SOF,HASA,SDA1,SIC,ROCAM3,ROCAM18,PNGA,SLOG,SpeA,SpeC,SpeG,SpeH,SpeI,SpeJ,SpeK,SpeL,SpeM,SSA,SMEZ,23S1,23S3,CAT,ERMB,ERMT,ERMA,FOLA,FOLP1,FOLP2,GYRA,LNUB,LSAC,LSAE,MEF,PARC,RPOB1,RPOBN,TETL,TETM,TETO\n" >> "$out_analysis"/BIN_GAS_"$batch_name"_Typing_Results.txt
 
 ###Will search thru every file in the batch directory and check if it matches the following regexs: _L.*_R1_001.fastq and _L.*_R2_001.fastq###
@@ -154,7 +154,7 @@ do
     fi
 done
 
-qsub -sync y -q all.q -t 1-$(cat $out_jobCntrl/job-control.txt | wc -l) -cwd -o "$out_qsub" -e "$out_qsub" ./StrepLab-JanOw_GAS-Typer.sh $out_jobCntrl
+qsub -sync y -q short.q -t 1-$(cat $out_jobCntrl/job-control.txt | wc -l) -cwd -o "$out_qsub" -e "$out_qsub" ./StrepLab-JanOw_GAS-Typer.sh $out_jobCntrl
 
 ###Output the emm type/MLST/drug resistance data for this sample to it's results output file###
 while read -r line
@@ -164,10 +164,11 @@ do
     final_result_Dir=$(echo $line | awk -F" " '{print $4}')
     #cat $final_outDir/SAMPLE_Isolate__Typing_Results.txt >> $final_result_Dir/SAMPL_GAS_"$batch_name"_Typing_Results.txt
     cat $final_outDir/TABLE_Isolate_Typing_results.txt >> $final_result_Dir/TABLE_GAS_"$batch_name"_Typing_Results.txt
+    rm $final_outDir/TABLE_Isolate_Typing_results.txt
     #cat $final_outDir/BIN_Isolate_Typing_results.txt >> $final_result_Dir/BIN_GAS_"$batch_name"_Typing_Results.txt
     #cat $final_outDir/TEMP_newPBP_allele_info.txt >> $final_result_Dir/UPDATR_GBS_"$batch_name"_Typing_Results.txt
-    if [[ -e $final_outDir/TEMP_newPBP_allele_info.txt ]]
+    if [[ -e $final_outDir/newPBP_allele_info.txt ]]
     then
-        cat $final_outDir/TEMP_newPBP_allele_info.txt >> $final_result_Dir/UPDATR_GBS_"$batch_name"_Typing_Results.txt
+        cat $final_outDir/newPBP_allele_info.txt >> $final_result_Dir/UPDATR_GBS_"$batch_name"_Typing_Results.txt
     fi
 done < $out_jobCntrl/job-control.txt

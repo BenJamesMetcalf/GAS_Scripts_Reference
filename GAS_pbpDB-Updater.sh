@@ -157,7 +157,7 @@ blastTyper () {
 	   samplName=$(echo "$3" | sed 's/PBP_//g')
            if [[ "$samplName" == "$lineName" ]]
            then
-	       pbp_out=$(echo "$line" | awk -F"\t" '{print $22}')
+	       pbp_out=$(echo "$line" | awk -F"\t" '{print $23}')
                #if [[ "$4" == "1A" ]]
                #then
 	       #   pbp1A_out=$(echo $pbp_out | sed 's/NEW:/'$pbpAlleleID':/g')
@@ -166,7 +166,7 @@ blastTyper () {
 	       if [[ "$4" == "2X" ]]
                then
 		   pbp2X_out=$(echo $pbp_out | sed 's/NEW/'$pbpAlleleID'/g')
-		   echo "$line" | awk -v var="$pbp2X_out" -v OFS='\t' '{$22=var; print }' >> "$5"_PRE
+		   echo "$line" | awk -v var="$pbp2X_out" -v OFS='\t' '{$23=var; print }' >> "$5"_PRE
                fi
            else
                echo "$line" >> "$5"_PRE

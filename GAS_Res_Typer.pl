@@ -7,7 +7,8 @@ use Data::Dumper;
 use Getopt::Std;
 use File::Copy qw(copy);
 use Env;
-use lib $ENV{MODULESHOME}."/init";
+#use lib $ENV{MODULESHOME}."/init";
+use lib "/usr/share/Modules/init/";
 use perl;
 
 ###MODULE LOAD###
