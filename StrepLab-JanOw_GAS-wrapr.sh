@@ -154,7 +154,8 @@ do
     fi
 done
 
-qsub -sync y -q short.q -t 1-$(cat $out_jobCntrl/job-control.txt | wc -l) -cwd -o "$out_qsub" -e "$out_qsub" ./StrepLab-JanOw_GAS-Typer.sh $out_jobCntrl
+#qsub -sync y -q dbd.q -t 1-$(cat $out_jobCntrl/job-control.txt | wc -l) -cwd -o "$out_qsub" -e "$out_qsub" ./StrepLab-JanOw_GAS-Typer.sh $out_jobCntrl
+qsub -sync y -q dbd.q,short.q -t 1-$(cat $out_jobCntrl/job-control.txt | wc -l) -cwd -o "$out_qsub" -e "$out_qsub" -l h_vmem=32G,h_rt=2:00:00 -pe smp 8 ./StrepLab-JanOw_GAS-Typer.sh $out_jobCntrl
 
 ###Output the emm type/MLST/drug resistance data for this sample to it's results output file###
 while read -r line

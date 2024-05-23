@@ -1,0 +1,33 @@
+definitions: profiles_csv
+None profiles
+sourced from: https://rest.pubmlst.org/db/pubmlst_spyogenes_seqdef/schemes/1/profiles_csv
+
+locus gki
+alleles_fasta
+Sourced from https://rest.pubmlst.org/db/pubmlst_spyogenes_seqdef/loci/gki/alleles_fasta
+
+locus gtr
+alleles_fasta
+Sourced from https://rest.pubmlst.org/db/pubmlst_spyogenes_seqdef/loci/gtr/alleles_fasta
+
+locus murI
+alleles_fasta
+Sourced from https://rest.pubmlst.org/db/pubmlst_spyogenes_seqdef/loci/murI/alleles_fasta
+
+locus mutS
+alleles_fasta
+Sourced from https://rest.pubmlst.org/db/pubmlst_spyogenes_seqdef/loci/mutS/alleles_fasta
+
+locus recP
+alleles_fasta
+Sourced from https://rest.pubmlst.org/db/pubmlst_spyogenes_seqdef/loci/recP/alleles_fasta
+
+locus xpt
+alleles_fasta
+Sourced from https://rest.pubmlst.org/db/pubmlst_spyogenes_seqdef/loci/xpt/alleles_fasta
+
+locus yqiL
+alleles_fasta
+Sourced from https://rest.pubmlst.org/db/pubmlst_spyogenes_seqdef/loci/yqiL/alleles_fasta
+
+all loci: Streptococcus_pyogenes.fasta

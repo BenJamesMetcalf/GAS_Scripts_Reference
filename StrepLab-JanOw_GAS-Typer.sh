@@ -168,7 +168,8 @@ then
     rm BIN*
     rm *Final.sam*
     rm *Results.txt
-    rm emm_region_extract.bed ARG-RESFI_fullgenes_results.txt contig-vs-frwd_nucl.txt velvet_qual_metrics.txt ./velvet_output/Sequences ./velvet_output/stats.txt ./velvet_output/Log
+    #rm emm_region_extract.bed ARG-RESFI_fullgenes_results.txt contig-vs-frwd_nucl.txt velvet_qual_metrics.txt ./velvet_output/Sequences ./velvet_output/stats.txt ./velvet_output/Log
+    rm ARG-RESFI_fullgenes_results.txt contig-vs-frwd_nucl.txt velvet_qual_metrics.txt ./velvet_output/Sequences ./velvet_output/stats.txt ./velvet_output/Log
     rm RES-MIC*
     rm emm_v*
     rm cutadapt_*_R*
