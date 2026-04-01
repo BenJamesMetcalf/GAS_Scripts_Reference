@@ -208,7 +208,7 @@ if ( -s "emm_region_extract.fasta") {
     if (glob("$emm_DB/blast_emm_Gene-nucl_DB*")) {
 	system("blastn -db $emm_DB/blast_emm_Gene-nucl_DB -query emm_region_extract.fasta -outfmt 6 -word_size 4 -out emm_vs_DB_nucl.txt");
     } else {
-	system("makeblastdb -in $emm_DB/emm_Gene-DB_Final.fasta -dbtype nucl -out $emm_DB/blast_emm_Gene-nucl_DB");
+	system("makeblastdb -in $emm_DB/emm_Gene-DB_v2_Final.fasta -dbtype nucl -out $emm_DB/blast_emm_Gene-nucl_DB");
 	system("blastn", "-db", "$emm_DB/blast_emm_Gene-nucl_DB", "-query", "emm_region_extract.fasta", "-outfmt", "6", "-word_size", "4", "-out", "emm_vs_DB_nucl.txt");
     }
 } else {
@@ -234,12 +234,14 @@ $outName =~ /EMM_(.*)/;
 my $finalName = $1;
 if ($best_emm_iden == 100 && $best_emm_len == 180) {
     #$best_emm_name =~ /\d+__EMM(.*)__EMM.*__\d+/;
-    $best_emm_name =~ /\d+__[A-Z]+(.*)__.*__\d+/;
+    #$best_emm_name =~ /\d+__[A-Z]+(.*)__.*__\d+/;
+    $best_emm_name =~ /[A-Z]+(.*)/;
     my $emmType = $1;
     print $fh "$finalName\t$emmType\t$best_emm_name\t$best_emm_iden\t$best_emm_len\n";
 } else {
     #$best_emm_name =~ /\d+__EMM(.*)__EMM.*__\d+/;
-    $best_emm_name =~ /\d+__[A-Z]+(.*)__.*__\d+/;
+    #$best_emm_name =~ /\d+__[A-Z]+(.*)__.*__\d+/;
+    $best_emm_name =~ /[A-Z]+(.*)/;
     my $emmType = $1;
     print $fh "$finalName\t$emmType*\t$best_emm_name\t$best_emm_iden\t$best_emm_len\n";
     ###OPEN 'Check_Target_Sequence.txt' FOR APPENDING (CHECK FOR FAILURES)

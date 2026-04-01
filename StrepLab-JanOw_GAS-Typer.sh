@@ -18,7 +18,7 @@ read -a PARAM <<< $(/bin/sed -n ${SGE_TASK_ID}p $1/job-control.txt)
 #module load cutadapt/1.8.3
 #module load srst2/0.1.7
 
-#module load --ignore_cache 
+#module load --ignore_cache
 module load perl/5.38.2
 module load bioperl/1.7.8
 module load blast+/2.13.0
@@ -39,8 +39,8 @@ readPair_2=${PARAM[1]}
 allDB_dir=${PARAM[2]}
 batch_out=${PARAM[3]}
 sampl_out=${PARAM[4]}
-#delete='true'
 delete='false'
+
 
 ###Start Doing Stuff###
 cd "$sampl_out"

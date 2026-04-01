@@ -165,7 +165,7 @@ open(my $bh,'>',$BIN_feat_out) or die "Could not open file '$BIN_feat_out' $!";
 my @Bin_Feat_arr = (0) x 26;
 #print $fh "Feature_Group\tTarget\n";
 my $outNameFEAT = "FEAT_".$outName;
-system("srst2 --samtools_args '\\-A' --input_pe $fastq1 $fastq2 --output $outNameFEAT --log --save_scores --min_coverage 99.9 --max_divergence 8 --gene_db $feat_DB");
+system("srst2 --samtools_args '\\-A' --input_pe $fastq1 $fastq2 --output $outNameFEAT --log --save_scores --min_coverage 99.5 --max_divergence 8 --gene_db $feat_DB");
 my @TEMP_FEAT_fullgene = glob("FEAT_*__fullgenes__*__results\.txt");
 my $FEAT_full_name = $TEMP_FEAT_fullgene[0];
 

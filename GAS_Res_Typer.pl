@@ -281,6 +281,7 @@ sub freebayes_prior_fix {
     open(my $rf,'>',"CHECK_target_ref.fna");
     print $rf "$REF_seq\n";
     close $rf;
+    #system("freebayes -q 20 -p 1 -f CHECK_target_ref.fna CHECK_target_seq.bam -v CHECK_target_seq.vcf");
     system("freebayes -q 20 -p 1 -F 0.2 -f CHECK_target_ref.fna CHECK_target_seq.bam -v CHECK_target_seq.vcf");
     system("bgzip CHECK_target_seq.vcf");
     system("tabix -p vcf CHECK_target_seq.vcf.gz");
@@ -512,11 +513,11 @@ while(<MYINPUTFILE>) {
 	    }
         } else {
 	    if ($drugRes_Col{"OTHER"} eq "neg") {
-                $drugRes_Col{"OTHER"} = $miscR_fullgene[2];
-            } else {
-                my $new_val = $drugRes_Col{"OTHER"}.":".$miscR_fullgene[2];
-                $drugRes_Col{"OTHER"} = $new_val;
-            }
+		$drugRes_Col{"OTHER"} = $miscR_fullgene[2];
+	    } else {
+		my $new_val = $drugRes_Col{"OTHER"}.":".$miscR_fullgene[2];
+		$drugRes_Col{"OTHER"} = $new_val;
+	    }
 	}
     }
 }
@@ -541,10 +542,11 @@ if ($Res_Targets{"PARC"} eq "pos") {
             print substr($PARC_aaRef,$-[0],1), ' ', substr($PARC_aaSeq,$-[0],1), ' ', $-[0], "\n";
             #my $diff_element = "pos".($-[0]+1).":".substr($RPOB_aaRef,$-[0],1)."->".substr($RPOB_aaSeq,$-[0],1);
 	    my $diff_element = substr($PARC_aaRef,$-[0],1).($-[0]+1).substr($PARC_aaSeq,$-[0],1);
-            push(@seq_diffs,$diff_element);
+	    my $diff_element2 = substr($PARC_aaRef,$-[0],1).($-[0]+1+75).substr($PARC_aaSeq,$-[0],1);
+            push(@seq_diffs,$diff_element2);
         }
         print "PARC seq: $PARC_seq\n";
-        my $diff_output = join('-',@seq_diffs);#,
+        my $diff_output = join(',',@seq_diffs);
         my $bin_out = join(':',@seq_diffs);
         $Bin_Res_arr[14] = $bin_out;
 	my $PARC_out = "PARC-".$diff_output;
@@ -572,10 +574,11 @@ if ($Res_Targets{"GYRA"} eq "pos") {
             print substr($GYRA_aaRef,$-[0],1), ' ', substr($GYRA_aaSeq,$-[0],1), ' ', $-[0], "\n";
             #my $diff_element = "pos".($-[0]+1).":".substr($RPOB_aaRef,$-[0],1)."->".substr($RPOB_aaSeq,$-[0],1);
             my $diff_element = substr($GYRA_aaRef,$-[0],1).($-[0]+1).substr($GYRA_aaSeq,$-[0],1);
-            push(@seq_diffs,$diff_element);
+	    my $diff_element2 = substr($GYRA_aaRef,$-[0],1).($-[0]+1+70).substr($GYRA_aaSeq,$-[0],1);
+            push(@seq_diffs,$diff_element2);
         }
         print "GYRA seq: $GYRA_seq\n";
-        my $diff_output = join('-',@seq_diffs);
+        my $diff_output = join(',',@seq_diffs);
 	my $bin_out = join(':',@seq_diffs);
 	$Bin_Res_arr[9] = $bin_out;
         my $GYRA_out = "GYRA-".$diff_output;
@@ -608,7 +611,8 @@ if ($Res_Targets{"23S1"} eq "pos") {
             print substr($S123_ntRef,$-[0],1), ' ', substr($S123_seq,$-[0],1), ' ', $-[0], "\n";
             #my $diff_element = "pos".($-[0]+1).":".substr($RPOB_aaRef,$-[0],1)."->".substr($RPOB_aaSeq,$-[0],1);
             my $diff_element = substr($S123_ntRef,$-[0],1).($-[0]+1).substr($S123_seq,$-[0],1);
-            push(@seq_diffs,$diff_element);
+	    my $diff_element2 = substr($S123_ntRef,$-[0],1).($-[0]+1+2039).substr($S123_seq,$-[0],1);
+            push(@seq_diffs,$diff_element2);
         }
         print "23S1 seq: $S123_seq\n";
         my $diff_output = join(',',@seq_diffs);
@@ -641,7 +645,8 @@ if ($Res_Targets{"23S3"} eq "pos") {
             print substr($S323_ntRef,$-[0],1), ' ', substr($S323_seq,$-[0],1), ' ', $-[0], "\n";
             #my $diff_element = "pos".($-[0]+1).":".substr($RPOB_aaRef,$-[0],1)."->".substr($RPOB_aaSeq,$-[0],1);
             my $diff_element = substr($S323_ntRef,$-[0],1).($-[0]+1).substr($S323_seq,$-[0],1);
-            push(@seq_diffs,$diff_element);
+	    my $diff_element2 = substr($S323_ntRef,$-[0],1).($-[0]+1+2568).substr($S323_seq,$-[0],1);
+            push(@seq_diffs,$diff_element2);
         }
         print "23S3 seq: $S323_seq\n";
         my $diff_output = join(',',@seq_diffs);
@@ -687,7 +692,8 @@ if ($FOLA_file && ! $FOLA_error) {
             print substr($FOLA_aaRef,$-[0],1), ' ', substr($FOLA_aaSeq,$-[0],1), ' ', $-[0], "\n";
             #my $diff_element = "pos".($-[0]+1).":".substr($RPOB_aaRef,$-[0],1)."->".substr($RPOB_aaSeq,$-[0],1);
             my $diff_element = substr($FOLA_aaRef,$-[0],1).($-[0]+1).substr($FOLA_aaSeq,$-[0],1);
-            push(@seq_diffs,$diff_element);
+	    my $diff_element2 = substr($FOLA_aaRef,$-[0],1).($-[0]+1+80).substr($FOLA_aaSeq,$-[0],1);
+            push(@seq_diffs,$diff_element2);
         }
         print "FOLA seq: $FOLA_seq\n";
         my $diff_output = join(',',@seq_diffs);
@@ -778,7 +784,8 @@ if ($Res_Targets{"RPOB1"} eq "pos") {
             print substr($RPOB1_aaRef,$-[0],1), ' ', substr($RPOB1_aaSeq,$-[0],1), ' ', $-[0], "\n";
             #my $diff_element = "pos".($-[0]+1).":".substr($RPOB_aaRef,$-[0],1)."->".substr($RPOB_aaSeq,$-[0],1);
             my $diff_element = substr($RPOB1_aaRef,$-[0],1).($-[0]+1).substr($RPOB1_aaSeq,$-[0],1);
-            push(@seq_diffs,$diff_element);
+	    my $diff_element2 = substr($RPOB1_aaRef,$-[0],1).($-[0]+1+465).substr($RPOB1_aaSeq,$-[0],1);
+            push(@seq_diffs,$diff_element2);
         }
         print "RPOB1 seq: $RPOB1_seq\n";
         my $diff_output = join(',',@seq_diffs);

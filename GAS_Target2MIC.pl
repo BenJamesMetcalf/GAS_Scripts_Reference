@@ -79,7 +79,8 @@ $drug{CPT} = "Flag,Flag,Flag";
 $drug{AMP} = "Flag,Flag,Flag";
 $drug{PEN} = "Flag,Flag,Flag";
 $drug{MER} = "Flag,Flag,Flag";
-if ($pbp_type <= 18 && $pbp_type != [11|17] && $pbp_type !~ /[A-Za-z]/) {
+#if ($pbp_type <= 18 && $pbp_type != [11|17] && $pbp_type !~ /[A-Za-z]/) {
+if ((($pbp_type <= 20 && $pbp_type !~ /^(11|17)$/) || $pbp_type =~ /^(51|58|73)$/) && $pbp_type !~ /[A-Za-z]/) {
     $drug{ZOX} = "<=,0.12,U";
     $drug{FOX} = "<=,2,U";
     $drug{TAX} = "<=,0.06,S";
@@ -145,14 +146,16 @@ if ($Res_hash{"GYRA_PARC"} eq "neg") {
     $Out_hash{"GYRA_PARC"} = "$Res_hash{GYRA_PARC},$drug{CIP},$drug{LFX}";
 } else {
     my @Res_targs = split(':',$Res_hash{GYRA_PARC});
-    if ((grep/GYRA-S11F/i,@Res_targs) && (grep/PARC-S6[F|Y]/i,@Res_targs)) {
-	print "Found GYRA-S11F:PARC-S6[F|Y]\n";
+    if ((grep/GYRA-S81F/i,@Res_targs) && (grep/PARC-S81[F|Y]/i,@Res_targs)) {
+	print "Found GYRA-S81F:PARC-S81[F|Y]\n";
 	$drug{LFX} = ">=,8,R";
-    } elsif ((grep/PARC-S6F/i,@Res_targs)) {
-	print "Found PARC-S6F\n";
+    } elsif (grep(/GYRA/i,@Res_targs) && grep(/PARC/i,@Res_targs)) {
+        $drug{LFX} = "Flag,Flag,Flag";
+    } elsif ((grep/PARC-S81F/i,@Res_targs)) {
+	print "Found PARC-S81F\n";
 	$drug{LFX} = "=,4,I";
-    } elsif ((grep/PARC-D10[G|N]/i,@Res_targs) || (grep/PARC-D5N/i,@Res_targs) || (grep/PARC-S6A/i,@Res_targs)) {
-	print "Found PARC-D10[G|N] or PARC-D5N or PARC-S6A\n";
+    } elsif ((grep/PARC-D85[G|N|Y]/i,@Res_targs) || (grep/PARC-D80N/i,@Res_targs) || (grep/PARC-S81A/i,@Res_targs)) {
+	print "Found PARC-D85[G|N] or PARC-D80N or PARC-S81A\n";
 	$drug{LFX} = "=,2,S";
     } else {
 	$drug{LFX} = "Flag,Flag,Flag";
@@ -170,37 +173,39 @@ $drug{SXT} = "<=,0.5,U";
 if ($Res_hash{"OTHER"} eq "neg") {
     print "OTHER,$Res_hash{OTHER},".$drug{DAP}.",".$drug{VAN}.",".$drug{RIF}.",".$drug{CHL}.",".$drug{SXT}."\n";
     $Out_hash{"OTHER"} = "$Res_hash{OTHER},$drug{DAP},$drug{VAN},$drug{RIF},$drug{CHL},$drug{SXT}";
+#} else {
+#    my @Res_targs = split(':',$Res_hash{OTHER});
+#    if ($Res_hash{OTHER} ne "ant(6)-Ia:Ant6-Ia_AGly:aph(3')-III:Aph3-III_AGly:Sat4A_Agly" && $Res_hash{OTHER} ne "aph(3')-III:Aph3-III_AGly:Sat4A_AGly") {
+#	print "I'm in the wrong loop\n";
+#	foreach my $target (@Res_targs) {
+#	    if ($target !~ m/CAT|FOLA|FOLP|RPOB|MSR/i) { #&& $Res_hash{"OTHER"} !~  m/MSRD/i) {
+#		print "Found an ARGANNOT/RESFINDER target. Flag everything\n";
+#		$drug{DAP} = "Flag,Flag,Flag";
+#		$drug{VAN} = "Flag,Flag,Flag";
+#		$drug{RIF} = "Flag,Flag,Flag";
+#		$drug{CHL} = "Flag,Flag,Flag";
+#		$drug{SXT} = "Flag,Flag,Flag";
+#		last;
+#	    }
+#	}
+#    }
 } else {
     my @Res_targs = split(':',$Res_hash{OTHER});
-    if ($Res_hash{OTHER} ne "ant(6)-Ia:Ant6-Ia_AGly:aph(3')-III:Aph3-III_AGly:Sat4A_Agly" && $Res_hash{OTHER} ne "aph(3')-III:Aph3-III_AGly:Sat4A_AGly") {
-	print "I'm in the wrong loop\n";
-	foreach my $target (@Res_targs) {
-	    if ($target !~ m/CAT|FOLA|FOLP|RPOB|MSR/i) { #&& $Res_hash{"OTHER"} !~  m/MSRD/i) {
-		print "Found an ARGANNOT/RESFINDER target. Flag everything\n";
-		$drug{DAP} = "Flag,Flag,Flag";
-		$drug{VAN} = "Flag,Flag,Flag";
-		$drug{RIF} = "Flag,Flag,Flag";
-		$drug{CHL} = "Flag,Flag,Flag";
-		$drug{SXT} = "Flag,Flag,Flag";
-		last;
-	    }
+    foreach my $target (@Res_targs) {
+	if ($target =~ m/CAT/i) {
+	    print "Found CAT\n";
+	    $drug{CHL} = ">=,16,R";
+	} elsif ($target =~ m/FOLA/i && $target =~ m/FOLP/i) {
+	    print "Found FOLA and FOLP\n";
+	    $drug{SXT} = ">=,4,U";
+	} elsif ($target =~ m/FOLA/i || $target =~ m/FOLP/i) {
+	    print "Found FOLA or FOLP\n";
+	    $drug{SXT} = "=,2,U";
+	} elsif ($target =~ m/RPOB/i) {
+	    print "Found RPOB\n";
+	    $drug{RIF} = "Flag,Flag,Flag";
 	}
     }
-	foreach my $target (@Res_targs) {
-	    if ($target =~ m/CAT/i) {
-		print "Found CAT\n";
-		$drug{CHL} = ">=,16,R";
-	    } elsif ($target =~ m/FOLA/i && $target =~ m/FOLP/i) {
-		print "Found FOLA and FOLP\n";
-		$drug{SXT} = ">=,4,U";
-	    } elsif ($target =~ m/FOLA/i || $target =~ m/FOLP/i) {
-		print "Found FOLA or FOLP\n";
-		$drug{SXT} = "=,2,U";
-	    } elsif ($target =~ m/RPOB/i) {
-		print "Found RPOB\n";
-		$drug{RIF} = "Flag,Flag,Flag";
-	    }
-	}
     print "OTHER,$Res_hash{OTHER},".$drug{DAP}.",".$drug{VAN}.",".$drug{RIF}.",".$drug{CHL}."\n";
     $Out_hash{"OTHER"} = "$Res_hash{OTHER},$drug{DAP},$drug{VAN},$drug{RIF},$drug{CHL},$drug{SXT}";
 }
