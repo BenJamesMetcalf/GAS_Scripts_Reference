@@ -9,14 +9,26 @@ read -a PARAM <<< $(/bin/sed -n ${SGE_TASK_ID}p $1/job-control.txt)
 
 ###Load Modules###
 #. /usr/share/Modules/init/bash
-module load perl/5.22.1
-module load ncbi-blast+/2.2.29
-module load BEDTools/2.17.0
-module load freebayes/0.9.21
-module load prodigal/2.60
+#module load perl/5.22.1
+#module load ncbi-blast+/2.2.29
+#module load BEDTools/2.17.0
+#module load freebayes/0.9.21
+#module load prodigal/2.60
 #module load cutadapt/1.8
-module load cutadapt/1.8.3
-module load srst2/0.1.7
+#module load cutadapt/1.8.3
+#module load srst2/0.1.7
+
+#module load --ignore_cache 
+module load perl/5.38.2
+module load bioperl/1.7.8
+module load blast+/2.13.0
+module load bedtools/2.17.0
+module load freebayes/1.3.5
+module load prodigal/2.6
+#module load cutadapt/4.6
+#module load srst2/0.1.7
+module load samtools/0.1.18
+module load gcccore
 
 ###This script is called for each job in the qsub array. The purpose of this code is to read in and parse a line of the job-control.txt file
 ###created by 'StrepLab-JanOw_GAS-wrapr.sh' and pass that information, as arguments, to other programs responsible for various parts of strain
@@ -27,8 +39,8 @@ readPair_2=${PARAM[1]}
 allDB_dir=${PARAM[2]}
 batch_out=${PARAM[3]}
 sampl_out=${PARAM[4]}
-delete='true'
-
+#delete='true'
+delete='false'
 
 ###Start Doing Stuff###
 cd "$sampl_out"
@@ -41,6 +53,7 @@ out_nameMLST=MLST_"$just_name"
 #out_namePBP=PBP_"$just_name"
 
 ###Pre-Process Paired-end Reads###
+module load cutadapt/4.6
 fastq1_trimd=cutadapt_"$just_name"_S1_L001_R1_001.fastq
 fastq2_trimd=cutadapt_"$just_name"_S1_L001_R2_001.fastq
 cutadapt -b AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -q 20 --minimum-length 50 --paired-output temp2.fastq -o temp1.fastq $readPair_1 $readPair_2
@@ -53,19 +66,21 @@ mkdir "$just_name"_R2_cut
 fastqc "$fastq1_trimd" --outdir=./"$just_name"_R1_cut
 fastqc "$fastq2_trimd" --outdir=./"$just_name"_R2_cut
 module unload fastqc/0.11.5
+module unload cutadapt/4.6
 
+module load srst2/0.1.7
 ###Call MLST###
 srst2 --samtools_args "\-A" --mlst_delimiter '_' --input_pe "$readPair_1" "$readPair_2" --output "$out_nameMLST" --save_scores --mlst_db "$allDB_dir/Streptococcus_pyogenes.fasta" --mlst_definitions "$allDB_dir/spyogenes.txt" --min_coverage 99.999
 ###Check and extract new MLST alleles###
 MLST_allele_checkr.pl "$out_nameMLST"__mlst__Streptococcus_pyogenes__results.txt "$out_nameMLST"__*.Streptococcus_pyogenes.sorted.bam "$allDB_dir/Streptococcus_pyogenes.fasta"
 
 ###Call emm Type###
-module unload perl/5.22.1
-module load perl/5.16.1-MT
+#module unload perl/5.22.1
+#module load perl/5.16.1-MT
 emm_typer.pl -1 "$readPair_1" -2 "$readPair_1" -r "$allDB_dir" -n "$just_name"
 PBP-Gene_Typer.pl -1 "$readPair_1" -2 "$readPair_2" -r "$allDB_dir/GAS_bLactam_Ref.fasta" -n "$just_name" -s GAS -p 2X
-module unload perl/5.16.1-MT
-module load perl/5.22.1
+#module unload perl/5.16.1-MT
+#module load perl/5.22.1
 
 ###Call GAS Misc Resistance###
 GAS_Res_Typer.pl -1 "$readPair_1" -2 "$readPair_2" -d "$allDB_dir" -r GAS_Res_Gene-DB_Final.fasta -n "$just_name"
@@ -187,11 +202,22 @@ fi
 
 
 ###Unload Modules###
-module unload perl/5.22.1
-module unload ncbi-blast+/2.2.29
-module unload BEDTools/2.17.0
-module unload freebayes/0.9.21
-module unload prodigal/2.60
+#module unload perl/5.22.1
+#module unload ncbi-blast+/2.2.29
+#module unload BEDTools/2.17.0
+#module unload freebayes/0.9.21
+#module unload prodigal/2.60
 #module unload cutadapt/1.8
-module unload cutadapt/1.8.3
+#module unload cutadapt/1.8.3
+#module unload srst2/0.1.7
+
+module unload perl/5.38.2
+module unload bioperl/1.7.8
+module unload blast+/2.13.0
+module unload bedtools/2.17.0
+module unload freebayes/1.3.5
+module unload prodigal/2.6
+#module unload cutadapt/4.6
 module unload srst2/0.1.7
+module unload samtools/0.1.18
+module unload gcccore

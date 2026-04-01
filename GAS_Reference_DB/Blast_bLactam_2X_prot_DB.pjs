@@ -1,0 +1,22 @@
+{
+  "version": "1.2",
+  "dbname": "Blast_bLactam_2X_prot_DB",
+  "dbtype": "Protein",
+  "db-version": 5,
+  "description": "/scicomp/groups/OID/NCIRD/DBD/RDB/Strep_Lab/External/GAS_Scripts_Reference/GAS_Reference_DB/GAS_bLactam_2X-DB.faa",
+  "number-of-letters": 30653,
+  "number-of-sequences": 88,
+  "last-updated": "2026-01-21T13:20:00",
+  "number-of-volumes": 1,
+  "bytes-total": 76361,
+  "bytes-to-cache": 31662,
+  "files": [
+    "Blast_bLactam_2X_prot_DB.pdb",
+    "Blast_bLactam_2X_prot_DB.phr",
+    "Blast_bLactam_2X_prot_DB.pin",
+    "Blast_bLactam_2X_prot_DB.pot",
+    "Blast_bLactam_2X_prot_DB.psq",
+    "Blast_bLactam_2X_prot_DB.ptf",
+    "Blast_bLactam_2X_prot_DB.pto"
+  ]
+}

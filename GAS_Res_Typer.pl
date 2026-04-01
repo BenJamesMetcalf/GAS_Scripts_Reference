@@ -281,7 +281,7 @@ sub freebayes_prior_fix {
     open(my $rf,'>',"CHECK_target_ref.fna");
     print $rf "$REF_seq\n";
     close $rf;
-    system("freebayes -q 20 -p 1 -f CHECK_target_ref.fna CHECK_target_seq.bam -v CHECK_target_seq.vcf");
+    system("freebayes -q 20 -p 1 -F 0.2 -f CHECK_target_ref.fna CHECK_target_seq.bam -v CHECK_target_seq.vcf");
     system("bgzip CHECK_target_seq.vcf");
     system("tabix -p vcf CHECK_target_seq.vcf.gz");
     my $extractSeq = `echo "$REF_seq" | vcf-consensus CHECK_target_seq.vcf.gz`;
@@ -544,7 +544,7 @@ if ($Res_Targets{"PARC"} eq "pos") {
             push(@seq_diffs,$diff_element);
         }
         print "PARC seq: $PARC_seq\n";
-        my $diff_output = join(',',@seq_diffs);
+        my $diff_output = join('-',@seq_diffs);#,
         my $bin_out = join(':',@seq_diffs);
         $Bin_Res_arr[14] = $bin_out;
 	my $PARC_out = "PARC-".$diff_output;
@@ -575,7 +575,7 @@ if ($Res_Targets{"GYRA"} eq "pos") {
             push(@seq_diffs,$diff_element);
         }
         print "GYRA seq: $GYRA_seq\n";
-        my $diff_output = join(',',@seq_diffs);
+        my $diff_output = join('-',@seq_diffs);
 	my $bin_out = join(':',@seq_diffs);
 	$Bin_Res_arr[9] = $bin_out;
         my $GYRA_out = "GYRA-".$diff_output;
@@ -663,11 +663,11 @@ if ($Res_Targets{"23S3"} eq "pos") {
 ###The FOLA-1 marker for tmR resistance may contain mosiac regions and must be extracted from the genome assembly###
 my $REF_seq = extractFastaByID("7__FOLA__FOLA-1__7","$res_DB");
 `echo "$REF_seq" > TEMP_FOLA_Ref.fna`;
-module "unload perl/5.22.1";
-module "load perl/5.16.1-MT";
+#module "unload perl/5.22.1";
+#module "load perl/5.16.1-MT";
 system("LoTrac_target.pl -1 $fastq1 -2 $fastq2 -q TEMP_FOLA_Ref.fna -S 2.2M -f -n $outName -o $outDir");
-module "unload perl/5.16.1-MT";
-module "load perl/5.22.1";
+#module "unload perl/5.16.1-MT";
+#module "load perl/5.22.1";
 my $FOLA_file = glob("EXTRACT_*FOLA*.fasta");
 my $FOLA_error = glob("ERROR_*FOLA*.fasta");
 my @FOLA_output;

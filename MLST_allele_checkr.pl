@@ -67,7 +67,7 @@ if (! $MLST_mismatch == 0) {
 	    print $exFile_out "For MLST Allele/SNP: $_\n";
 	    $_ =~ /(.*)\/.*/;
 	    my $extract_allele = $1;
-	    my $pileup_allele = `samtools mpileup -f $MLST_ref $bam_input -r $extract_allele`;
+	    my $pileup_allele = `samtools mpileup -f $MLST_ref $bam_input -r $extract_allele -B`;
 
 	    my $MLST_bam = $extract_allele."_".$bam_input;
 	    (my $MLST_bai = $MLST_bam) =~ s/\.bam/\.bai/g;
