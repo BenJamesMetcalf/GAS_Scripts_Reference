@@ -146,17 +146,20 @@ if ($Res_hash{"GYRA_PARC"} eq "neg") {
     $Out_hash{"GYRA_PARC"} = "$Res_hash{GYRA_PARC},$drug{CIP},$drug{LFX}";
 } else {
     my @Res_targs = split(':',$Res_hash{GYRA_PARC});
-    if ((grep/GYRA-S81F/i,@Res_targs) && (grep/PARC-S81[F|Y]/i,@Res_targs)) {
+    if (grep(/GYRA-S81F/i,@Res_targs) && grep(/PARC-S81[F|Y]/i,@Res_targs)) {
 	print "Found GYRA-S81F:PARC-S81[F|Y]\n";
 	$drug{LFX} = ">=,8,R";
+    } elsif (grep(/GYRA-S81F/i,@Res_targs) && grep(/PARC-D85G/i,@Res_targs)) {
+	print "Found GYRA-S81F:PARC-S85G\n";
+	$drug{LFX} = "=,4,I";
     } elsif (grep(/GYRA/i,@Res_targs) && grep(/PARC/i,@Res_targs)) {
         $drug{LFX} = "Flag,Flag,Flag";
-    } elsif ((grep/PARC-S81F/i,@Res_targs)) {
+    } elsif (grep(/PARC-S81F/i,@Res_targs)) {
 	print "Found PARC-S81F\n";
 	$drug{LFX} = "=,4,I";
-    } elsif ((grep/PARC-D85[G|N|Y]/i,@Res_targs) || (grep/PARC-D80N/i,@Res_targs) || (grep/PARC-S81A/i,@Res_targs)) {
+    } elsif (grep(/PARC-D85[G|N|Y]/i,@Res_targs) || grep(/PARC-D80N/i,@Res_targs) || grep(/PARC-S81A/i,@Res_targs)) {
 	print "Found PARC-D85[G|N] or PARC-D80N or PARC-S81A\n";
-	$drug{LFX} = "=,2,S";
+	$drug{LFX} = "<=,2,S";
     } else {
 	$drug{LFX} = "Flag,Flag,Flag";
     }

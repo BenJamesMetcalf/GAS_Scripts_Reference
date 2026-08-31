@@ -546,7 +546,7 @@ if ($Res_Targets{"PARC"} eq "pos") {
             push(@seq_diffs,$diff_element2);
         }
         print "PARC seq: $PARC_seq\n";
-        my $diff_output = join(',',@seq_diffs);
+        my $diff_output = join(';',@seq_diffs); #was ,
         my $bin_out = join(':',@seq_diffs);
         $Bin_Res_arr[14] = $bin_out;
 	my $PARC_out = "PARC-".$diff_output;
@@ -578,7 +578,7 @@ if ($Res_Targets{"GYRA"} eq "pos") {
             push(@seq_diffs,$diff_element2);
         }
         print "GYRA seq: $GYRA_seq\n";
-        my $diff_output = join(',',@seq_diffs);
+        my $diff_output = join(';',@seq_diffs); #was ,
 	my $bin_out = join(':',@seq_diffs);
 	$Bin_Res_arr[9] = $bin_out;
         my $GYRA_out = "GYRA-".$diff_output;
@@ -615,7 +615,7 @@ if ($Res_Targets{"23S1"} eq "pos") {
             push(@seq_diffs,$diff_element2);
         }
         print "23S1 seq: $S123_seq\n";
-        my $diff_output = join(',',@seq_diffs);
+        my $diff_output = join(';',@seq_diffs); #was ,
 	my $bin_out = join(':',@seq_diffs);
 	$Bin_Res_arr[0] = $bin_out;
         my $S123_out = "23S1-".$diff_output;
@@ -649,7 +649,7 @@ if ($Res_Targets{"23S3"} eq "pos") {
             push(@seq_diffs,$diff_element2);
         }
         print "23S3 seq: $S323_seq\n";
-        my $diff_output = join(',',@seq_diffs);
+        my $diff_output = join(';',@seq_diffs); #was ,
 	my $bin_out = join(':',@seq_diffs);
 	$Bin_Res_arr[1] = $bin_out;
         my $S323_out = "23S3-".$diff_output;
@@ -696,7 +696,7 @@ if ($FOLA_file && ! $FOLA_error) {
             push(@seq_diffs,$diff_element2);
         }
         print "FOLA seq: $FOLA_seq\n";
-        my $diff_output = join(',',@seq_diffs);
+        my $diff_output = join(';',@seq_diffs); #was ,
 	my $bin_out = join(':',@seq_diffs);
 	$Bin_Res_arr[6] = $bin_out;
         my $FOLA_out = "FOLA-".$diff_output;
@@ -788,7 +788,7 @@ if ($Res_Targets{"RPOB1"} eq "pos") {
             push(@seq_diffs,$diff_element2);
         }
         print "RPOB1 seq: $RPOB1_seq\n";
-        my $diff_output = join(',',@seq_diffs);
+        my $diff_output = join(';',@seq_diffs); #was ,
 	my $bin_out = join(':',@seq_diffs);
 	$Bin_Res_arr[15] = $bin_out;
         my $RPOB1_out = "RPOB1-".$diff_output;
@@ -817,7 +817,7 @@ if ($Res_Targets{"RPOBN"} eq "pos") {
             push(@seq_diffs,$diff_element);
         }
         print "RPOBN seq: $RPOBN_seq\n";
-        my $diff_output = join(',',@seq_diffs);
+        my $diff_output = join(';',@seq_diffs); #was ,
 	my $bin_out = join(':',@seq_diffs);
 	$Bin_Res_arr[16] = $bin_out;
         my $RPOBN_out = "RPOBN-".$diff_output;
